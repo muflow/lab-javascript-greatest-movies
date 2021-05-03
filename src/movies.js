@@ -17,25 +17,27 @@ const howManyMovies = moviesArray => {
     return newMoviesArray.length;
   };
 // Iteration 3: All rates average - Get the average of all rates with 2 decimals
-function ratesAverage(movies){
-    if (movies.length === 0){
-        return 0;
-    } else {
-        const sumRates = movies.reduce((acc, movie) => {
-            return acc + parseInt(movie.rate, 10);
-        },0);
-        const numRates = movies.length;
-        return parseFloat((sumRates / numRates).toFixed(2));
-        return sumeRates;
-    }
+function round(number, decimals) {
+    return parseFloat(number.toFixed(decimals))
 }
+
+function ratesAverage(movies) {
+    const rates = movies.map((movie) => movie.rate || 0);
+
+    const sum = rates.reduce((acum,rate) => acum + rate, 0);
+    const avg = sum / rates.length;
+
+    return round(avg, 2) || 0 ; //En el caso que el resultado no sea un numero, devolvemos 0.
+}
+
+console.log(ratesAverage(movies));
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesRate(movies){
-    let dramaMovies = movies.filter((movie) => {
-        return movie.genere.includes('Drama')
-    })
-    return ratesAverage(dramaMovies); 
+    const moviesDrama = movies.filter((movie) => movie.genre.includes("Drama"))
+    return ratesAverage(moviesDrama);
 }
+
+console.log(dramaMoviesRate(movies));
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
 function orderByYear(movies){
@@ -61,11 +63,28 @@ function orderByYear(movies){
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 // convertir para hacer minutos. separar oras i minutos split() ´´´> array dos elementos horas y minutosparseInt() para pasar de strings a numeros, luego hacemos un REDUCE del array min, min
-/*
-function stringTominutes(movies){
-    movies.for.Each() ... vedi screen shot
+function turnHoursToMinutes(movies) {
+    return movies.map(movie => {
+        let duration;
+        if (!movie.duration.includes('min')) {
+            duration = +movie.duration[0] * 60;
+        } else if (!movie.duration.includes('h')) {
+            if (movie.duration.length === 4) {
+                duration = +movie.duration[0];
+            } else if (movie.duration.length === 5) {
+                duration = +movie.duration[0] * 10 + +movie.duration[1];
+            }
+        } else if (movie.duration.length === 7) {
+            duration = +movie.duration[0] * 60 + +movie.duration[3];
+        } else if (movie.duration.length === 8) {
+            duration = +movie.duration[0] * 60 + +movie.duration[3] * 10 + +movie.duration[4];
+        }
+        return {
+            ...movie,
+            "duration": duration,
+        }
+    });
 }
 
-*/
-
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
+
